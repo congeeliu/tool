@@ -1,14 +1,12 @@
-package com.usts.backend.controller;
+package com.usts.backend.test.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.usts.backend.pojo.Student;
-import com.usts.backend.service.StudentService;
+import com.usts.backend.test.pojo.Student;
+import com.usts.backend.test.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-//import java.util.Map;
 
 @RestController
 public class StudentController {
@@ -31,9 +29,13 @@ public class StudentController {
     }
 
     @GetMapping("/student/get/")
-    private JSONObject getList(int page, int size, String name) {
-//        return studentService.getList(page, size);
-        return studentService.find(page, size, name);
+        private JSONObject getList(int page, int size) {
+        return studentService.getList(page, size);
+    }
+
+    @GetMapping("/student/find/")
+    private JSONObject find(Integer id, int page, int size) {
+        return studentService.find(id, page, size);
     }
 
 }

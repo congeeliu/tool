@@ -1,16 +1,11 @@
-package com.usts.backend.mapper;
+package com.usts.backend.test.mapper;
 
-//import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.usts.backend.pojo.Student;
+import com.usts.backend.test.pojo.Student;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-//@Mapper
-//public interface StudentMapper extends BaseMapper<Student> {
-//}
 
 @Mapper
 @Repository
@@ -23,10 +18,10 @@ public interface StudentMapper {
 
     List<Student> getList(@Param("currIndex")int currIndex, @Param("pageSize")int pageSize);
 
-    List<Student> find(@Param("currIndex")int currIndex, @Param("pageSize")int pageSize, String name);
+    List<Student> find(@Param("id")Integer id, @Param("currIndex")int currIndex, @Param("pageSize")int pageSize);
 
     int getCount();
 
-    int getCountOfFind(String name);
+    int getCountOfFind(Integer id);
 
 }

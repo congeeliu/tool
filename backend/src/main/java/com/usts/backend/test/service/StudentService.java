@@ -1,9 +1,7 @@
-package com.usts.backend.service;
+package com.usts.backend.test.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.usts.backend.pojo.Student;
-
-//import java.util.Map;
+import com.usts.backend.test.pojo.Student;
 
 public interface StudentService {
     JSONObject add(Student student);
@@ -14,6 +12,6 @@ public interface StudentService {
 
     JSONObject getList(int page, int size);
 
-    JSONObject find(int page, int size, String name);
+    JSONObject find(Integer id, int page, int size);
 
 }

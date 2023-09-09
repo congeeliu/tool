@@ -1,5 +1,10 @@
 package com.usts.backend.service;
 
+import com.usts.backend.pojo.GenerateMessage;
+import com.usts.backend.pojo.Property;
+
+import java.util.List;
+
 public interface GenerateService {
-    void generate(String packageName, String entityName, String attribute, String type);
+    void generateAll(GenerateMessage generateMessage);
 }

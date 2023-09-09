@@ -4,10 +4,10 @@
       <div class="row mb-3">
         <label for="find" class="col-1 col-form-label">查询</label>
         <div class="col-3">
-          <input v-model="findContent.name" type="text" class="form-control" id="find">
+          <input v-model="findContent.id" type="text" class="form-control" id="find">
         </div>
         <div class="col-3">
-          <button @click="pullPage(1)" type="button" class="btn btn-primary m-1">查询</button>
+          <button @click="find(1)" type="button" class="btn btn-primary m-1">查询</button>
           <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#add-modal">新增</button>
           <!-- add-modal -->
           <div class="modal fade" id="add-modal" tabindex="-1">
@@ -23,6 +23,12 @@
                       <label for="name" class="col-2 col-form-label">name:</label>
                       <div class="col-10">
                         <input v-model="studentAdd.name" type="text" class="form-control" id="name">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="name" class="col-2 col-form-label">age:</label>
+                      <div class="col-10">
+                        <input v-model="studentAdd.age" type="text" class="form-control" id="name">
                       </div>
                     </div>
                   </form>
@@ -51,6 +57,7 @@
         <tr v-for="student in students" :key="student.id">
           <td>{{ student.id }}</td>
           <td>{{ student.name }}</td>
+          <td>{{ student.age }}</td>
           <td>
             <button @click="remove(student.id)" type="button" class="btn btn-primary btn-sm me-2">删除</button>
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
@@ -69,6 +76,10 @@
                         <label for="name" class="col-2 col-form-label">name:</label>
                         <div class="col-10">
                           <input v-model="student.name" type="text" class="form-control" id="name">
+                        </div>
+                        <label for="name" class="col-2 col-form-label">name:</label>
+                        <div class="col-10">
+                          <input v-model="student.age" type="text" class="form-control" id="name">
                         </div>
                       </div>
                     </form>
@@ -126,15 +137,17 @@ export default {
     let pageSize = 10;
     let currentPage = 1;
     let findContent = reactive({
-      name: '',
-    })
+      id: 0,
+    });
+    let isFind = ref(false);
 
     const clickPage = page => {
       if (page === -2) page = currentPage - 1;
       else if (page === -1) page = currentPage + 1;
       let maxPage = parseInt(Math.ceil(recordsCount / pageSize));
       if (page >= 1 && page <= maxPage) {
-        pullPage(page);
+        if (!isFind.value) pullPage(page);
+        else find(page);
       }
     };
 
@@ -153,14 +166,38 @@ export default {
     };
 
     const pullPage = (page) => {
+      isFind.value = true;
       currentPage = page
       $.ajax({
         url: 'http://127.0.0.1:3000/student/get/',
         type: 'get',
         data: {
+          // id: findContent.id,
           page: page,
           size: pageSize,
-          ...findContent,
+          // ...findContent,
+        },
+        headers: {
+          Authorization: 'Bearer ' + store.state.user.token
+        },
+        success(resp) {
+          students.value = resp.students;
+          recordsCount = resp.recordsCount;
+          updatePage();
+        }
+      });
+    };
+
+    const find = (page) => {
+      currentPage = page
+      $.ajax({
+        url: 'http://127.0.0.1:3000/student/find/',
+        type: 'get',
+        data: {
+          id: findContent.id,
+          page: page,
+          size: pageSize,
+          // ...findContent,
         },
         headers: {
           Authorization: 'Bearer ' + store.state.user.token
@@ -181,6 +218,7 @@ export default {
         type: 'post',
         data: {
           name: studentAdd.name,
+          age: studentAdd.age,
         },
         headers: {
           Authorization: 'Bearer ' + store.state.user.token
@@ -219,6 +257,7 @@ export default {
         data: {
           id: student.id,
           name: student.name,
+          age: student.age,
         },
         headers: {
           Authorization: 'Bearer ' + store.state.user.token
@@ -242,6 +281,7 @@ export default {
       remove,
       update,
       pullPage,
+      find,
     }
   }
 }

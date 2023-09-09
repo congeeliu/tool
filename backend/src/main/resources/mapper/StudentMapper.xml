@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.usts.backend.mapper.StudentMapper">
+<mapper namespace="com.usts.backend.test.mapper.StudentMapper">
     <insert id="add">
-        insert into student (name) values(#{name})
+        insert into student (name, age) values (#{name}, #{age})
     </insert>
 
     <delete id="remove">
@@ -10,10 +10,12 @@
     </delete>
 
     <update id="update">
-        update student set name = #{name} where id = #{id}
+        update student
+        set name = #{name}, age = #{age}
+        where id = #{id}
     </update>
 
-    <select id="getList" resultType="com.usts.backend.pojo.Student">
+    <select id="getList" resultType="com.usts.backend.test.pojo.Student">
         select * from student limit #{currIndex}, #{pageSize}
     </select>
 
@@ -21,11 +23,11 @@
         select count(*) from student
     </select>
 
-    <select id="find" resultType="com.usts.backend.pojo.Student">
+    <select id="find" resultType="com.usts.backend.test.pojo.Student">
         select * from student
         <where>
-            <if test="name != ''">
-                and name like "%"#{name}"%"
+            <if test="id != ''">
+                and id like concat('%',#{id},'%')
             </if>
         </where>
         limit #{currIndex}, #{pageSize}
@@ -34,8 +36,8 @@
     <select id="getCountOfFind" resultType="Integer">
         select count(*) from student
         <where>
-            <if test="name != ''">
-                and name like "%"#{name}"%"
+            <if test="id != ''">
+                and id like concat('%',#{id},'%')
             </if>
         </where>
     </select>
